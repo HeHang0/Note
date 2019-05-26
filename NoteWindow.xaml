@@ -1,0 +1,22 @@
+﻿<Window x:Class="Note.NoteWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Note" Icon="logo.ico" MinWidth="100" MinHeight="100" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged"
+        mc:Ignorable="d" ResizeMode="CanResizeWithGrip" MouseMove="Window_MouseMove" MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseLeftButtonUp="Window_MouseLeftButtonUp"
+        Title="便笺" Height="260" Width="400" ShowInTaskbar="False" AllowsTransparency="True" WindowStyle="None">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Background="#fce73c">
+            <Label MouseLeftButtonDown="DeleteNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" Width="12" Margin="10,0,0,0" HorizontalAlignment="Left">▭</Label>
+            <Label MouseLeftButtonDown="MaxNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12" Margin="0,0,25,0">◿</Label>
+            <Label MouseLeftButtonDown="FoldNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12"  Margin="0,0,10,0">◳</Label>
+        </Grid>
+        <TextBox Name="NoteText" TextBlock.LineHeight="22" TextBlock.LineStackingStrategy="BlockLineHeight" MaxLength="1000" Grid.Row="1" Padding="5" BorderThickness="0" TextChanged="NoteText_TextChanged" Background="#fff69b" TextWrapping="Wrap" AcceptsReturn="True"/>
+
+    </Grid>
+</Window>
