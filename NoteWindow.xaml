@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Note" Icon="logo.ico" MinWidth="100" MinHeight="100" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged"
         mc:Ignorable="d" ResizeMode="CanResizeWithGrip" MouseMove="Window_MouseMove" MouseLeftButtonDown="Window_MouseLeftButtonDown" MouseLeftButtonUp="Window_MouseLeftButtonUp"
         Title="便笺" Height="260" Width="400" ShowInTaskbar="False" AllowsTransparency="True" WindowStyle="None">
-    <Grid Background="#fce73c">
+    <Grid Background="{Binding BackGroundColor}">
         <Grid.RowDefinitions>
             <RowDefinition Height="15"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
@@ -16,7 +16,13 @@
             <Label MouseLeftButtonDown="MaxNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12" Margin="0,0,25,0">◿</Label>
             <Label MouseLeftButtonDown="FoldNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12"  Margin="0,0,10,0">◳</Label>
         </Grid>
-        <TextBox Name="NoteText" Background="#66FFFFFF" TextBlock.LineHeight="22" TextBlock.LineStackingStrategy="BlockLineHeight" MaxLength="1000" Grid.Row="1" Padding="5" BorderThickness="0" TextChanged="NoteText_TextChanged" TextWrapping="Wrap" AcceptsReturn="True" FontStyle="Italic" FontWeight="Bold"/>
-
+        <TextBox Name="NoteText" Background="#66FFFFFF" 
+                 TextBlock.LineStackingStrategy="BlockLineHeight" 
+                 MaxLength="1000" Grid.Row="1" Padding="5" BorderThickness="0" 
+                 TextChanged="NoteText_TextChanged" TextWrapping="Wrap" 
+                 AcceptsReturn="True" 
+                 TextBlock.LineHeight="{Binding LineHeight}" 
+                 FontStyle="{Binding FontStyle}" FontWeight="{Binding FontWeight}"
+                 FontSize="{Binding FontSize}" FontFamily="{Binding FontFamily}"/>
     </Grid>
 </Window>

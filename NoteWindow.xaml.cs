@@ -22,6 +22,7 @@ namespace Note
             closeAction = ca;
             titleChange = tc;
             InitializeComponent();
+            DataContext = ThemeModel.Instance;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

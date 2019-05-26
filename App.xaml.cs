@@ -21,6 +21,7 @@ namespace Note
             base.OnStartup(e);
             InitNotifyIcon();
             CheckRoamingFolder();
+            CheckSetting();
             Current.ShutdownMode = ShutdownMode.OnExplicitShutdown;
         }
 
@@ -53,7 +54,7 @@ namespace Note
                 tw = new ThemeWindow();
                 tw.Closed += Tw_Closed;
             }
-            tw.Show();
+             tw.Show();
             tw.Activate();
             if(tw.WindowState == WindowState.Minimized)
             {
@@ -166,10 +167,37 @@ namespace Note
             Current.Shutdown();
         }
 
+        private void CheckSetting()
+        {
+            try
+            {
+                var settingStr = File.ReadAllText(Path.Combine(noteData, "setting.set"));
+                var settings = settingStr.Split('+');
+                if(settings.Length == 6)
+                {
+                    var theme = ThemeModel.Instance;
+
+                    theme.BackGroundColorItem = theme.BackGroundColorList.SingleOrDefault(m => m.Name == settings[0]);
+
+                    theme.FontFamilyItem = theme.FontFamilyList.SingleOrDefault(m => m.Name == settings[1]);
+
+                    theme.FontSizeItem = theme.FontSizeList.SingleOrDefault(m => m.Name == settings[2] + " px");
+
+                    theme.LineHeightItem = theme.FontSizeList.SingleOrDefault(m => m.Name == settings[3] + " px");
+
+                    theme.Blod = settings[4].ToUpper() == "TRUE";
+                    theme.Italic = settings[5].ToUpper() == "TRUE";
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
         private void SaveToRoaming()
         {
             var noteData = CheckRoamingFolder(true);
-            foreach (var file in Directory.GetFiles(noteData))
+            foreach (var file in Directory.GetFiles(Path.Combine(noteData, "Note")))
             {
                 FileInfo fi = new FileInfo(file);
                 try
@@ -183,21 +211,29 @@ namespace Note
             int index = 1;
             foreach (var item in Notes)
             {
-                File.WriteAllText(Path.Combine(noteData, $"{index++}.note"), item.Value.NoteText.Text);
+                File.WriteAllText(Path.Combine(noteData, "Note", $"{index++}.note"), item.Value.NoteText.Text);
             }
+            var theme = ThemeModel.Instance;
+            string settingStr = $"{theme.BackGroundColorItem.Name}+{theme.FontFamilyItem.Name}+{theme.FontSizeItem.Value}+{theme.LineHeightItem.Value}+{theme.Blod}+{theme.Italic}";
+            File.WriteAllText(Path.Combine(noteData, "setting.set"), settingStr);
         }
-
+        private string noteData;
         private string CheckRoamingFolder(bool onlyCheck = false)
         {
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var noteData = Path.Combine(appData, "Note_oo__H__oo");
+            noteData = Path.Combine(appData, "Note_oo__H__oo");
+            var noteHistory = Path.Combine(noteData, "Note");
             if (!Directory.Exists(noteData))
             {
                 Directory.CreateDirectory(noteData);
             }
+            if (!Directory.Exists(noteHistory))
+            {
+                Directory.CreateDirectory(noteHistory);
+            }
             else if(!onlyCheck)
             {
-                FileInfo[] files = new DirectoryInfo(noteData).GetFiles();
+                FileInfo[] files = new DirectoryInfo(noteHistory).GetFiles();
                 foreach (var file in files)
                 {
                     if (file.FullName.EndsWith(".note"))

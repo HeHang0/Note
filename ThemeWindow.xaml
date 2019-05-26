@@ -4,30 +4,183 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Note"
-        mc:Ignorable="d"
-        Title="ThemeWindow" Height="450" Width="800">
+        mc:Ignorable="d" Icon="logo.ico"
+        Title="设置" Height="450" Width="400" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
+    <Window.Resources>
+        <!-- ComboBoxItem样式 -->
+        <Style x:Key="ComboBoxItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <!--<Setter Property="Height" Value="40"/>-->
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Grid Name="Back">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="{Binding Width}"></ColumnDefinition>
+                                <ColumnDefinition Width="20"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Content="{Binding Name}" Padding="15 5 0 0" Height="25"/>
+                            <Canvas Grid.Column="1" Height="15" Background="{Binding Value}" Width="Auto" />
+                        </Grid>
+                        <!--<Border Name="Back" Background="Transparent" BorderThickness="0,0,0,0" BorderBrush="#FF6A6A6A" >
+                            <ContentPresenter ContentSource="{Binding Source}" Margin="{TemplateBinding Padding}" HorizontalAlignment="Left" VerticalAlignment="Center"></ContentPresenter>
+                        </Border>-->
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Back" Property="Background" Value="#474747"></Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Back" Property="Background" Value="#7D7C7C"></Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ToggleButton样式（折叠展开按钮） -->
+        <Style x:Key="ComboBoxToggleButton" TargetType="{x:Type ToggleButton}">
+            <Setter Property="OverridesDefaultStyle" Value="true"/>
+            <Setter Property="IsTabStop" Value="false"/>
+            <Setter Property="Focusable" Value="false"/>
+            <Setter Property="ClickMode" Value="Press"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                        <Border x:Name="templateRoot" CornerRadius="4" SnapsToDevicePixels="true" Background="Transparent" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="#FF565656">
+                            <Border x:Name="splitBorder" CornerRadius="4" Width="15" SnapsToDevicePixels="true" Margin="0" HorizontalAlignment="Right" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="#00565656">
+                                <Path x:Name="arrow" VerticalAlignment="Center" Margin="2,2,0,0" Stretch="Fill" Height="8" Width="8" HorizontalAlignment="Left" Fill="{TemplateBinding BorderBrush}" Data="M 50,50 L 0,0 100,0 z"/>
+                            </Border>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsEditable, RelativeSource={RelativeSource AncestorType={x:Type ComboBox}}}" Value="true"/>
+                                    <Condition Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsPressed, RelativeSource={RelativeSource Self}}" Value="false"/>
+                                    <Condition Binding="{Binding IsEnabled, RelativeSource={RelativeSource Self}}" Value="true"/>
+                                </MultiDataTrigger.Conditions>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="#FF565656"/>
+                            </MultiDataTrigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Fill" TargetName="arrow" Value="#FFADADAD"/>
+                                <Setter Property="BorderBrush" TargetName="templateRoot" Value="#FFADADAD"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+                        <GradientStop Color="#FFF9F8F8" Offset="0"/>
+                        <GradientStop Color="#FFC6C6CA" Offset="0.75"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="Padding" Value="6,3,5,3"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="ItemContainerStyle" Value="{DynamicResource ComboBoxItemStyle}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="0"/>
+                            </Grid.ColumnDefinitions>
+                            <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Margin="1" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
+                                <Border x:Name="dropDownBorder" BorderBrush="{DynamicResource {x:Static SystemColors.WindowFrameBrushKey}}" BorderThickness="1" Background="#FFFFFF" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=templateRoot}">
+                                    <ScrollViewer x:Name="DropDownScrollViewer">
+                                        <Grid x:Name="grid" RenderOptions.ClearTypeHint="Enabled">
+                                            <Canvas x:Name="canvas" HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                <Rectangle x:Name="opaqueRect" Fill="{Binding Background, ElementName=dropDownBorder}" Height="{Binding ActualHeight, ElementName=dropDownBorder}" Width="{Binding ActualWidth, ElementName=dropDownBorder}"/>
+                                            </Canvas>
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Continue" Background="#4CCFCDCD"/>
+                                            <!--<ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Contained" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>-->
+                                        </Grid>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                            <Border Grid.ColumnSpan="1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4" Height="Auto">
+                                <Grid>
+                                    <Grid DataContext="{TemplateBinding SelectedItem}">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                            <ColumnDefinition Width="{Binding Width}"></ColumnDefinition>
+                                            <ColumnDefinition Width="20"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Label Grid.Column="0" Content="{Binding Name}" Padding="15 5 0 0" Height="25"/>
+                                        <Canvas Grid.Column="1" Height="15" Background="{Binding Value}" Width="Auto" />
+                                    </Grid>
+                                    <!--<ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Content="{TemplateBinding SelectionBoxItem}" ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" IsHitTestVisible="false" Margin="{TemplateBinding Padding}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>-->
+
+                                    <ToggleButton x:Name="toggleButton" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource ComboBoxToggleButton}"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter Property="Height" TargetName="dropDownBorder" Value="95"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsGrouping" Value="true"/>
+                                    <Condition Property="VirtualizingPanel.IsVirtualizingWhenGrouping" Value="false"/>
+                                </MultiTrigger.Conditions>
+                                <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            </MultiTrigger>
+                            <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
+                                <Setter Property="Canvas.Top" TargetName="opaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
+                                <Setter Property="Canvas.Left" TargetName="opaqueRect" Value="{Binding HorizontalOffset, ElementName=DropDownScrollViewer}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
         <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="颜色：" HorizontalAlignment="Left" Margin="55,25,0,0" VerticalAlignment="Top"/>
-                <ComboBox Width="200" Height="50" Padding="10" SelectedItem="{Binding BackGroundColor}">
-                    <x:Static Member="FontWeights.Black"/>
-                    <x:Static Member="FontWeights.Bold"/>
-                    <x:Static Member="FontWeights.DemiBold"/>
-                    <x:Static Member="FontWeights.ExtraBlack"/>
-                    <x:Static Member="FontWeights.ExtraBold"/>
-                    <x:Static Member="FontWeights.ExtraLight"/>
-                    <x:Static Member="FontWeights.Heavy"/>
-                    <x:Static Member="FontWeights.Light"/>
-                    <x:Static Member="FontWeights.Medium"/>
-                    <x:Static Member="FontWeights.Normal"/>
-                    <x:Static Member="FontWeights.Regular"/>
-                    <x:Static Member="FontWeights.SemiBold"/>
-                    <x:Static Member="FontWeights.Thin"/>
-                    <x:Static Member="FontWeights.UltraBlack"/>
-                    <x:Static Member="FontWeights.UltraBold"/>
-                    <x:Static Member="FontWeights.UltraLight"/>
-                </ComboBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="颜色：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox ItemsSource="{Binding BackGroundColorList}" SelectedItem="{Binding BackGroundColorItem}"
+                          Width="100" Height="25" Style="{StaticResource ComboBoxStyle}" MaxDropDownHeight="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="字体：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox ItemsSource="{Binding FontFamilyList}" SelectedItem="{Binding FontFamilyItem}"
+                          Width="100" Height="25" Style="{StaticResource ComboBoxStyle}" MaxDropDownHeight="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="大小：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox ItemsSource="{Binding FontSizeList}" SelectedItem="{Binding FontSizeItem}"
+                          Width="100" Height="25" Style="{StaticResource ComboBoxStyle}" MaxDropDownHeight="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="行高：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <ComboBox ItemsSource="{Binding FontSizeList}" SelectedItem="{Binding LineHeightItem}"
+                          Width="100" Height="25" Style="{StaticResource ComboBoxStyle}" MaxDropDownHeight="250"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="加粗：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <CheckBox Width="100" IsChecked="{Binding Blod}" VerticalContentAlignment="Bottom" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0 30 0 0">
+                <Label Content="斜体：" Padding="0 6 0 0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                <CheckBox Width="100" IsChecked="{Binding Italic}" VerticalContentAlignment="Bottom" />
             </StackPanel>
         </StackPanel>
 
