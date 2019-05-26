@@ -1,0 +1,35 @@
+﻿<Window x:Class="Note.ThemeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Note"
+        mc:Ignorable="d"
+        Title="ThemeWindow" Height="450" Width="800">
+    <Grid>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <Label Content="颜色：" HorizontalAlignment="Left" Margin="55,25,0,0" VerticalAlignment="Top"/>
+                <ComboBox Width="200" Height="50" Padding="10" SelectedItem="{Binding BackGroundColor}">
+                    <x:Static Member="FontWeights.Black"/>
+                    <x:Static Member="FontWeights.Bold"/>
+                    <x:Static Member="FontWeights.DemiBold"/>
+                    <x:Static Member="FontWeights.ExtraBlack"/>
+                    <x:Static Member="FontWeights.ExtraBold"/>
+                    <x:Static Member="FontWeights.ExtraLight"/>
+                    <x:Static Member="FontWeights.Heavy"/>
+                    <x:Static Member="FontWeights.Light"/>
+                    <x:Static Member="FontWeights.Medium"/>
+                    <x:Static Member="FontWeights.Normal"/>
+                    <x:Static Member="FontWeights.Regular"/>
+                    <x:Static Member="FontWeights.SemiBold"/>
+                    <x:Static Member="FontWeights.Thin"/>
+                    <x:Static Member="FontWeights.UltraBlack"/>
+                    <x:Static Member="FontWeights.UltraBold"/>
+                    <x:Static Member="FontWeights.UltraLight"/>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Window>

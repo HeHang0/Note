@@ -37,10 +37,34 @@ namespace Note
             var closeItem = new MenuItem("退出");
             closeItem.Click += ExitApp;
             notesItem = new MenuItem("显示");
+            var settingItem = new MenuItem("设置");
+            settingItem.Click += ShowSetting;
             var aboutItem = new MenuItem("关于");
             aboutItem.Click += ShowAbout;
-            var menu = new MenuItem[] { newItem, notesItem, aboutItem, closeItem };
+            var menu = new MenuItem[] { newItem, notesItem, settingItem, aboutItem, closeItem };
             notifyIcon.ContextMenu = new ContextMenu(menu);
+        }
+
+        private ThemeWindow tw;
+        private void ShowSetting(object sender, EventArgs e)
+        {
+            if (tw == null)
+            {
+                tw = new ThemeWindow();
+                tw.Closed += Tw_Closed;
+            }
+            tw.Show();
+            tw.Activate();
+            if(tw.WindowState == WindowState.Minimized)
+            {
+                tw.WindowState = WindowState.Normal;
+            }
+        }
+
+        private void Tw_Closed(object sender, EventArgs e)
+        {
+            tw.Closed -= Tw_Closed;
+            tw = null;
         }
 
 
