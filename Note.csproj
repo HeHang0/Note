@@ -76,9 +76,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DockingManager.cs" />
     <Compile Include="ThemeModel.cs" />
     <Compile Include="ThemeWindow.xaml.cs">
       <DependentUpon>ThemeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="WindowUniversal.xaml.cs">
+      <DependentUpon>WindowUniversal.xaml</DependentUpon>
     </Compile>
     <Page Include="AboutWindow.xaml">
       <SubType>Designer</SubType>
@@ -102,6 +106,10 @@
     <Page Include="ThemeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WindowUniversal.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -145,7 +153,11 @@
   <ItemGroup>
     <Resource Include="logo.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Prism.Core">
+      <Version>8.0.0.1909</Version>
+    </PackageReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>

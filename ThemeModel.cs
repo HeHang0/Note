@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace Note
 {
-    class ThemeModel : INotifyPropertyChanged
+    public class ThemeModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged(string propertyName)

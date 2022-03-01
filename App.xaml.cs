@@ -102,9 +102,8 @@ namespace Note
 
         private NoteWindow NewNote()
         {
-            var note = new NoteWindow(WindowClose, TitleChange);
             string title = getTitle("新建便笺");
-            note.Title = title;
+            var note = new NoteWindow(WindowClose, TitleChange, title);
             Notes.Add(title, note);
             var mi = new MenuItem(title);
             mi.Name = title;
@@ -153,11 +152,12 @@ namespace Note
         private string getTitle(string title)
         {
             int index = 1;
-            while (Notes.ContainsKey(title))
+            string newTitle = title;
+            while (Notes.ContainsKey(newTitle))
             {
-                title = $"{title} {index++}";
+                newTitle = $"{title} {index++}";
             }
-            return title;
+            return newTitle;
         }
 
         private void ExitApp(object sender, EventArgs e)
