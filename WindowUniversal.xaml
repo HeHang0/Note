@@ -137,7 +137,7 @@
                                     <Button FontSize="12" Width="18" Command="{TemplateBinding themes:UniversalWindowStyle.DeleteNoteCommond}" Foreground="{TemplateBinding themes:UniversalWindowStyle.Foreground}">
                                         ▭
                                     </Button>
-                                    <TextBlock x:Name="TitleTextBlock" Margin="5 0 0 0" FontSize="12" Text="{TemplateBinding Title}"
+                                    <TextBlock x:Name="TitleTextBlock" Margin="5 0 0 0" FontSize="10" Text="{TemplateBinding Title}" Visibility="{TemplateBinding themes:UniversalWindowStyle.TitleVisibility}"
                                                VerticalAlignment="Center" TextAlignment="Center" Foreground="{TemplateBinding themes:UniversalWindowStyle.Foreground}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal"

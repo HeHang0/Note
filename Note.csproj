@@ -154,11 +154,6 @@
     <Resource Include="logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Core">
-      <Version>8.0.0.1909</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\logo.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

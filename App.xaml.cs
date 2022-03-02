@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using Application = System.Windows.Application;
 
@@ -33,7 +31,7 @@ namespace Note
             notifyIcon.Text = "便签";//最小化到托盘时，鼠标点击时显示的文本
             notifyIcon.Icon = Note.Properties.Resources.logo;//程序图标
             notifyIcon.Visible = true;
-            var newItem = new MenuItem("新建便签");
+            var newItem = new MenuItem("新建便条");
             newItem.Click += NewNoteClient;
             var closeItem = new MenuItem("退出");
             closeItem.Click += ExitApp;
@@ -102,8 +100,8 @@ namespace Note
 
         private NoteWindow NewNote()
         {
-            string title = getTitle("新建便笺");
-            var note = new NoteWindow(WindowClose, TitleChange, title);
+            string title = getTitle("新建便条");
+            var note = new NoteWindow(WindowClose, TitleChange, NewNote, title);
             Notes.Add(title, note);
             var mi = new MenuItem(title);
             mi.Name = title;
@@ -211,7 +209,13 @@ namespace Note
             int index = 1;
             foreach (var item in Notes)
             {
-                File.WriteAllText(Path.Combine(noteData, "Note", $"{index++}.note"), item.Value.NoteText.Text);
+                var document = item.Value.NoteText.Document;
+                var range = new TextRange(document.ContentStart, document.ContentEnd);
+                using (var file = new FileStream(Path.Combine(noteData, "Note", $"{index++}.note"), FileMode.OpenOrCreate))
+                {
+                    range.Save(file, System.Windows.DataFormats.XamlPackage);
+                }
+                //File.WriteAllText(Path.Combine(noteData, "Note", $"{index++}.note"), XamlWriter.Save(item.Value.NoteText.Document));
             }
             var theme = ThemeModel.Instance;
             string settingStr = $"{theme.BackGroundColorItem.Name}+{theme.FontFamilyItem.Name}+{theme.FontSizeItem.Value}+{theme.LineHeightItem.Value}+{theme.Blod}+{theme.Italic}";
@@ -238,10 +242,18 @@ namespace Note
                 {
                     if (file.FullName.EndsWith(".note"))
                     {
-                        var text = File.ReadAllText(file.FullName);
-                        if (!string.IsNullOrWhiteSpace(text))
+                        try
                         {
-                            NewNote().NoteText.Text = text;
+                            FlowDocument document = new FlowDocument();
+                            var range = new TextRange(document.ContentStart, document.ContentEnd);
+                            using (var fileStream = new FileStream(file.FullName, FileMode.Open))
+                            {
+                                range.Load(fileStream, System.Windows.DataFormats.XamlPackage);
+                            }
+                            NewNote().NoteText.Document = document;
+                        }
+                        catch (Exception)
+                        {
                         }
                     }
                 }

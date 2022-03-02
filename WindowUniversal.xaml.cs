@@ -1,5 +1,4 @@
-﻿using Prism.Commands;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,6 +17,15 @@ namespace Note
 
         public static void SetTitleBar(DependencyObject element, UniversalTitleBar value)
             => element.SetValue(TitleBarProperty, value);
+
+        public static readonly DependencyProperty TitleVisibilityProperty = DependencyProperty.RegisterAttached(
+            "TitleVisibility", typeof(Visibility), typeof(UniversalWindowStyle),
+            new PropertyMetadata(Visibility.Visible));
+
+        public static Visibility GetTitleVisibility(DependencyObject element) => (Visibility)element.GetValue(TitleVisibilityProperty);
+
+        public static void SetTitleVisibility(DependencyObject element, Visibility value)
+            => element.SetValue(TitleVisibilityProperty, value);
 
         public static readonly DependencyProperty DeleteNoteCommondProperty = DependencyProperty.RegisterAttached(
             "DeleteNoteCommond", typeof(ICommand), typeof(UniversalWindowStyle),
@@ -151,5 +159,32 @@ namespace Note
         public Color ButtonPressedForeground { get; set; } = Colors.Black;
         public Color ButtonPressedBackground { get; set; } = Colors.Transparent;// Color.FromArgb(0xB2, 0x82, 0x82, 0x82);
         public ICommand Open => new DelegateCommand(() => { });
+    }
+
+    public class DelegateCommand : ICommand
+    {
+        private readonly Func<bool> canExecute = () => true;
+        private readonly Action executeMethod = null;
+        public DelegateCommand(Action executeMethod)
+        {
+            this.executeMethod = executeMethod;
+        }
+        public DelegateCommand(Action executeMethod, Func<bool> canExecuteMethod)
+        {
+            this.canExecute = canExecuteMethod;
+            this.executeMethod = executeMethod;
+        }
+
+        public event EventHandler CanExecuteChanged;
+
+        public bool CanExecute(object parameter = null)
+        {
+            return canExecute?.Invoke() ?? true;
+        }
+
+        public void Execute(object parameter = null)
+        {
+            executeMethod?.Invoke();
+        }
     }
 }

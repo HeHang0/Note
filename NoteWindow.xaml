@@ -5,28 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Note" Icon="logo.ico" MinWidth="100" MinHeight="100" mc:Ignorable="d"
         Title="便笺" Height="260" Width="400" Style="{StaticResource StyleWindowUniversal}"
-        Closing="Window_Closing"
+        Closing="Window_Closing" ResizeMode="CanResizeWithGrip"
+        BorderBrush="{Binding Settings.BackGroundColor}" BorderThickness="0"
         local:UniversalWindowStyle.Foreground="Black" Background="{Binding Settings.BackGroundColor}"
         local:UniversalWindowStyle.DeleteNoteCommond="{Binding Commands.DeleteNote}"
         local:UniversalWindowStyle.MaxNoteCommond="{Binding Commands.MaxNote}"
-        local:UniversalWindowStyle.FoldNoteCommond="{Binding Commands.FoldNote}">
+        local:UniversalWindowStyle.FoldNoteCommond="{Binding Commands.FoldNote}"
+        local:UniversalWindowStyle.TitleVisibility="{Binding Commands.TitleVisibility}">
+    <Window.InputBindings>
+        <KeyBinding Gesture="Control+N" Command="{Binding Commands.CreateNote}" />
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="18"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid>
-            <!--<Label MouseLeftButtonDown="DeleteNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" Width="12" Margin="10,0,0,0" HorizontalAlignment="Left">▭</Label>
-            <Label MouseLeftButtonDown="MaxNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12" Margin="0,0,25,0">◿</Label>
-            <Label MouseLeftButtonDown="FoldNote" VerticalContentAlignment="Top" Cursor="Hand" Padding="0" HorizontalAlignment="Right" Width="12"  Margin="0,0,10,0">◳</Label>-->
-        </Grid>
-        <TextBox Name="NoteText" Background="#66FFFFFF" 
-                 TextBlock.LineStackingStrategy="BlockLineHeight" 
-                 MaxLength="1000" Grid.Row="1" Padding="5" BorderThickness="0" 
-                 TextChanged="NoteText_TextChanged" TextWrapping="Wrap" 
-                 AcceptsReturn="True" 
-                 TextBlock.LineHeight="{Binding Settings.LineHeight}" 
-                 FontStyle="{Binding Settings.FontStyle}" FontWeight="{Binding Settings.FontWeight}"
-                 FontSize="{Binding Settings.FontSize}" FontFamily="{Binding Settings.FontFamily}"/>
+        <RichTextBox Name="NoteText" Background="#66FFFFFF"
+                     TextBlock.LineStackingStrategy="BlockLineHeight"
+                     Grid.Row="1" Padding="5" BorderThickness="0"
+                     TextChanged="NoteText_TextChanged"
+                     AcceptsReturn="True" 
+                     TextBlock.LineHeight="{Binding Settings.LineHeight}" 
+                     FontStyle="{Binding Settings.FontStyle}" FontWeight="{Binding Settings.FontWeight}"
+                     FontSize="{Binding Settings.FontSize}" FontFamily="{Binding Settings.FontFamily}"/>
     </Grid>
 </Window>
