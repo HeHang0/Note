@@ -31,6 +31,8 @@ namespace Note
             notifyIcon.Text = "便签";//最小化到托盘时，鼠标点击时显示的文本
             notifyIcon.Icon = Note.Properties.Resources.logo;//程序图标
             notifyIcon.Visible = true;
+            notifyIcon.Click += NotifyIcon_Click;
+            notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
             var newItem = new MenuItem("新建便条");
             newItem.Click += NewNoteClient;
             var closeItem = new MenuItem("退出");
@@ -42,6 +44,30 @@ namespace Note
             aboutItem.Click += ShowAbout;
             var menu = new MenuItem[] { newItem, notesItem, settingItem, aboutItem, closeItem };
             notifyIcon.ContextMenu = new ContextMenu(menu);
+        }
+
+        private void NotifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            foreach (MenuItem menuItem in notesItem.MenuItems)
+            {
+                if (menuItem.Checked)
+                {
+                    var note = Notes[menuItem.Text];
+                    ShowNote(note, false);
+                }
+            }
+        }
+
+        private void NotifyIcon_Click(object sender, EventArgs e)
+        {
+            foreach (MenuItem menuItem in notesItem.MenuItems)
+            {
+                if(menuItem.Checked)
+                {
+                    var note = Notes[menuItem.Text];
+                    ShowNote(note, true);
+                }
+            }
         }
 
         private ThemeWindow tw;
@@ -105,6 +131,7 @@ namespace Note
             Notes.Add(title, note);
             var mi = new MenuItem(title);
             mi.Name = title;
+            mi.Checked = true;
             mi.Click += ShowNote;
             notesItem.MenuItems.Add(mi);
             note.Show();
@@ -135,16 +162,29 @@ namespace Note
             }
         };
 
+        private void ShowNote(NoteWindow note, bool show)
+        {
+            if (show)
+            {
+                note.Show();
+                note.Activate();
+                if (note.WindowState == WindowState.Minimized)
+                {
+                    note.WindowState = WindowState.Normal;
+                }
+            }
+            else
+            {
+                note.Hide();
+            }
+        }
+
         private void ShowNote(object sender, EventArgs e)
         {
             var mi = sender as MenuItem;
             var note = Notes[mi.Text];
-            note.Show();
-            note.Activate();
-            if(note.WindowState == WindowState.Minimized)
-            {
-                note.WindowState = WindowState.Normal;
-            }
+            ShowNote(note, !mi.Checked);
+            mi.Checked = !mi.Checked;
         }
 
         private string getTitle(string title)

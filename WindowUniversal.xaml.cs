@@ -27,6 +27,15 @@ namespace Note
         public static void SetTitleVisibility(DependencyObject element, Visibility value)
             => element.SetValue(TitleVisibilityProperty, value);
 
+        public static readonly DependencyProperty MaxNoteVisibilityProperty = DependencyProperty.RegisterAttached(
+            "MaxNoteVisibility", typeof(Visibility), typeof(UniversalWindowStyle),
+            new PropertyMetadata(Visibility.Visible));
+
+        public static Visibility GetMaxNoteVisibility(DependencyObject element) => (Visibility)element.GetValue(MaxNoteVisibilityProperty);
+
+        public static void SetMaxNoteVisibility(DependencyObject element, Visibility value)
+            => element.SetValue(MaxNoteVisibilityProperty, value);
+
         public static readonly DependencyProperty DeleteNoteCommondProperty = DependencyProperty.RegisterAttached(
             "DeleteNoteCommond", typeof(ICommand), typeof(UniversalWindowStyle),
             new PropertyMetadata(null, OnDeleteNoteCommondChanged));
@@ -44,6 +53,15 @@ namespace Note
 
         public static void SetMaxNoteCommond(DependencyObject element, ICommand value)
             => element.SetValue(MaxNoteCommondProperty, value);
+
+        public static readonly DependencyProperty TitleMouseUpCommondProperty = DependencyProperty.RegisterAttached(
+            "TitleMouseUpCommond", typeof(ICommand), typeof(UniversalWindowStyle),
+            new PropertyMetadata(null, OnTitleMouseUpCommondChanged));
+
+        public static ICommand GetTitleMouseUpCommond(DependencyObject element) => (ICommand)element.GetValue(TitleMouseUpCommondProperty);
+
+        public static void SetTitleMouseUpCommond(DependencyObject element, ICommand value)
+            => element.SetValue(TitleMouseUpCommondProperty, value);
 
         public static readonly DependencyProperty FoldNoteCommondProperty = DependencyProperty.RegisterAttached(
             "FoldNoteCommond", typeof(ICommand), typeof(UniversalWindowStyle),
@@ -110,6 +128,11 @@ namespace Note
         }
 
         private static void OnMaxNoteCommondChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+
+        }
+
+        private static void OnTitleMouseUpCommondChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
 
         }

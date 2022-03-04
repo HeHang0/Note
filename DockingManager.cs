@@ -45,12 +45,12 @@ namespace Note
             var temp = HorizontalSet(w);
             foreach (var d in temp)
             {
-                if (t >= d - LIMITSIZE && t <= d + LIMITSIZE)
+                if (Math.Abs(t - d) <= LIMITSIZE)
                 {
                     w.Top = d;
                     break;
                 }
-                if (b >= d - LIMITSIZE && b <= d + LIMITSIZE)
+                if (Math.Abs(b - d) <= LIMITSIZE)
                 {
                     w.Top = d - w.Height;
                     break;
@@ -59,12 +59,12 @@ namespace Note
             temp = VerticalSet(w);
             foreach (var d in temp)
             {
-                if (l >= d - LIMITSIZE && l <= d + LIMITSIZE)
+                if (Math.Abs(l - d) <= LIMITSIZE)
                 {
                     w.Left = d;
                     break;
                 }
-                if (r >= d - LIMITSIZE && r <= d + LIMITSIZE)
+                if (Math.Abs(r - d) <= LIMITSIZE)
                 {
                     w.Left = d - w.Width;
                     break;

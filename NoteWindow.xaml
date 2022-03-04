@@ -3,15 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Note" Icon="logo.ico" MinWidth="100" MinHeight="100" mc:Ignorable="d"
+        xmlns:local="clr-namespace:Note" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" Icon="logo.ico" MinWidth="100" MinHeight="100" mc:Ignorable="d"
         Title="便笺" Height="260" Width="400" Style="{StaticResource StyleWindowUniversal}"
         Closing="Window_Closing" ResizeMode="CanResizeWithGrip"
         BorderBrush="{Binding Settings.BackGroundColor}" BorderThickness="0"
         local:UniversalWindowStyle.Foreground="Black" Background="{Binding Settings.BackGroundColor}"
+        SourceInitialized="Window_SourceInitialized"
         local:UniversalWindowStyle.DeleteNoteCommond="{Binding Commands.DeleteNote}"
         local:UniversalWindowStyle.MaxNoteCommond="{Binding Commands.MaxNote}"
         local:UniversalWindowStyle.FoldNoteCommond="{Binding Commands.FoldNote}"
-        local:UniversalWindowStyle.TitleVisibility="{Binding Commands.TitleVisibility}">
+        local:UniversalWindowStyle.TitleMouseUpCommond="{Binding Commands.TitleMouseUp}"
+        local:UniversalWindowStyle.TitleVisibility="{Binding Commands.TitleVisibility}"
+        local:UniversalWindowStyle.MaxNoteVisibility="{Binding Commands.MaxNoteVisibility}">
     <Window.InputBindings>
         <KeyBinding Gesture="Control+N" Command="{Binding Commands.CreateNote}" />
     </Window.InputBindings>
@@ -23,10 +26,57 @@
         <RichTextBox Name="NoteText" Background="#66FFFFFF"
                      TextBlock.LineStackingStrategy="BlockLineHeight"
                      Grid.Row="1" Padding="5" BorderThickness="0"
-                     TextChanged="NoteText_TextChanged"
+                     LostFocus="NoteText_TextChanged"
                      AcceptsReturn="True" 
-                     TextBlock.LineHeight="{Binding Settings.LineHeight}" 
+                     TextBlock.LineHeight="{Binding Settings.LineHeight}" ContextMenu="{x:Null}"
                      FontStyle="{Binding Settings.FontStyle}" FontWeight="{Binding Settings.FontWeight}"
-                     FontSize="{Binding Settings.FontSize}" FontFamily="{Binding Settings.FontFamily}"/>
+                     FontSize="{Binding Settings.FontSize}" FontFamily="{Binding Settings.FontFamily}" />
+        <Border x:Name="ToolsPannelBorder" Height="1" Grid.Row="1" Opacity="0" VerticalAlignment="Bottom" Margin="0,0,0,25" Background="#20000000"></Border>
+        <StackPanel x:Name="ToolsPannel" Background="#01FFFFFF" Opacity="1" Orientation="Horizontal" 
+                    Height="25" Grid.Row="1" VerticalAlignment="Bottom" Margin="5,0,5,0"
+                    MouseEnter="ButtonToolsPannel_MouseEnter" MouseLeave="ButtonToolsPannel_MouseLeave">
+            <Border x:Name="ButtonBold" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonBold_Click"
+                    Width="17" Height="17" ToolTip="加粗" Cursor="Hand">
+                <!--<Label Content="B" FontFamily="Georgia" FontWeight="Bold" Padding="0 2 0 0" HorizontalAlignment="Center"/>-->
+                <TextBlock Text="B" FontFamily="Georgia" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border x:Name="ButtonItalic" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonItalic_Click"
+                    Width="17" Height="17" Margin="5 0 0 0" ToolTip="倾斜" Cursor="Hand">
+                <!--<Label Content="I" FontFamily="Georgia" Padding="0 2 0 0" HorizontalAlignment="Center"/>-->
+                <TextBlock Text="I" FontFamily="Georgia" FontStyle="Italic" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border x:Name="ButtonUnderLine" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonUnderLine_Click"
+                    Width="17" Height="17" Margin="5 0 0 0" ToolTip="下划线" Cursor="Hand">
+                <TextBlock TextDecorations="Underline" Text="U" FontFamily="Georgia" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border x:Name="ButtonStrikeThrough" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonStrikeThrough_Click"
+                    Width="17" Height="17" Margin="5 0 0 0" ToolTip="删除线" Cursor="Hand">
+                <TextBlock TextDecorations="Strikethrough" Text="ab" FontFamily="Georgia" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <Border x:Name="ButtonOrderedList" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonOrderedList_Click"
+                    Width="17" Height="17" Margin="5 0 0 0" ToolTip="切换项目符号" Cursor="Hand">
+                <TextBlock  Text="ⅲ" FontFamily="Georgia" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.RenderTransform>                        
+                        <RotateTransform Angle="-90" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Border>
+            <Border x:Name="ButtonUnOrderedList" MouseEnter="ButtonTools_MouseEnter" MouseLeave="ButtonTools_MouseLeave"
+                    MouseLeftButtonUp="ButtonUnOrderedList_Click"
+                    Width="17" Height="17" Margin="5 0 0 0" ToolTip="切换编号" Cursor="Hand">
+                <TextBlock  Text="ⅲ" FontFamily="Georgia" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock.RenderTransform>
+                        <RotateTransform Angle="-90" />
+                    </TextBlock.RenderTransform>
+                </TextBlock>
+            </Border>
+
+        </StackPanel>
+
     </Grid>
 </Window>
